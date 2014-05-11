@@ -119,13 +119,13 @@ void handleSystemHIDEvent(void* target, void* refcon, IOHIDEventQueueRef queue, 
 	float deltaY = ABS(self.currentAccelY - prevAccelY);
 	float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
 
-	if (deltaX > KDeltaMinimum * 0.9 && deltaX > deltaY && deltaX > deltaZ) {
+	if (deltaX > KDeltaMinimum * 0.95 && deltaX > deltaY && deltaX > deltaZ) {
 		[self checkPossibleEventWithDelta:deltaX name:KEventNameSide];
 	}
-	else if (deltaY > KDeltaMinimum * 0.9 && deltaY > deltaX && deltaY > deltaZ) {
+	else if (deltaY > KDeltaMinimum * 0.95 && deltaY > deltaX && deltaY > deltaZ) {
 		[self checkPossibleEventWithDelta:deltaY name:KEventNameTop];
 	}
-	else if (deltaZ > KDeltaMinimum * 1.1 && deltaZ > deltaX && deltaZ > deltaY) {
+	else if (deltaZ > KDeltaMinimum * 1.05 && deltaZ > deltaX && deltaZ > deltaY) {
 		[self checkPossibleEventWithDelta:deltaZ name:KEventNameFront];
 	}
 }
