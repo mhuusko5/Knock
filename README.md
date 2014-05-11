@@ -1,3 +1,3 @@
-Peek
+Knock
 =====
-Read any selected text on your iOS device, quickly, one word at a time (demo/download at http://www.mhuusko5.com/#fleeting).
+Trigger Activator actions with a knock/hard tap on your iOS device (demo/download at http://www.mhuusko5.com/#knock).
