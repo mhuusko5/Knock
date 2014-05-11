@@ -1,0 +1,5 @@
+{
+	title = "Front/back knock/hard-tap";
+	group = "Knock/hard-tap";
+	description = "Knock/hard-tap on the front or back of your device.";
+}

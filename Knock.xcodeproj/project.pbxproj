@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0037C225191F10AD00900337 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C224191F10AD00900337 /* Foundation.framework */; };
+		0037C227191F10AD00900337 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C226191F10AD00900337 /* UIKit.framework */; };
+		0037C230191F10AD00900337 /* Knock.m in Sources */ = {isa = PBXBuildFile; fileRef = 0037C22F191F10AD00900337 /* Knock.m */; };
+		0037C242191F10DA00900337 /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C240191F10DA00900337 /* libactivator.dylib */; };
+		003B4F4C191F162E00E4C07D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 003B4F4B191F162E00E4C07D /* CoreMotion.framework */; };
+		00E1D7BB19200997008A26FD /* IOHIDDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7A919200997008A26FD /* IOHIDDisplay.h */; };
+		00E1D7BC19200997008A26FD /* IOHIDEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AA19200997008A26FD /* IOHIDEvent.h */; };
+		00E1D7BD19200997008A26FD /* IOHIDEventData.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AB19200997008A26FD /* IOHIDEventData.h */; };
+		00E1D7BE19200997008A26FD /* IOHIDEventQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AC19200997008A26FD /* IOHIDEventQueue.h */; };
+		00E1D7BF19200997008A26FD /* IOHIDEventSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AD19200997008A26FD /* IOHIDEventSystem.h */; };
+		00E1D7C019200997008A26FD /* IOHIDEventSystemClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AE19200997008A26FD /* IOHIDEventSystemClient.h */; };
+		00E1D7C119200997008A26FD /* IOHIDEventTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AF19200997008A26FD /* IOHIDEventTypes.h */; };
+		00E1D7C219200997008A26FD /* IOHIDNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B019200997008A26FD /* IOHIDNotification.h */; };
+		00E1D7C319200997008A26FD /* IOHIDService.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B119200997008A26FD /* IOHIDService.h */; };
+		00E1D7C419200997008A26FD /* IOHIDSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B219200997008A26FD /* IOHIDSession.h */; };
+		00E1D7C519200997008A26FD /* IOHIDUserDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B319200997008A26FD /* IOHIDUserDevice.h */; };
+		00E1D7C719200997008A26FD /* IOKitKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B519200997008A26FD /* IOKitKeys.h */; };
+		00E1D7C819200997008A26FD /* IOKitLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B619200997008A26FD /* IOKitLib.h */; };
+		00E1D7C919200997008A26FD /* IOReturn.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B719200997008A26FD /* IOReturn.h */; };
+		00E1D7CA19200997008A26FD /* IOTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B819200997008A26FD /* IOTypes.h */; };
+		00E1D7CB19200997008A26FD /* OSKext.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7B919200997008A26FD /* OSKext.h */; };
+		00E1D7CC19200997008A26FD /* OSMessageNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7BA19200997008A26FD /* OSMessageNotification.h */; };
+		00E1D7D019200A26008A26FD /* IOKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7CF19200A26008A26FD /* IOKit.h */; };
+		00E1D7D219200DB6008A26FD /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00E1D7D119200DB6008A26FD /* IOKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0037C221191F10AD00900337 /* Knock.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Knock.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		0037C224191F10AD00900337 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0037C226191F10AD00900337 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0037C22C191F10AD00900337 /* control */ = {isa = PBXFileReference; lastKnownFileType = text; name = control; path = Package/DEBIAN/control; sourceTree = "<group>"; };
+		0037C22E191F10AD00900337 /* PackageVersion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PackageVersion.plist; sourceTree = "<group>"; };
+		0037C22F191F10AD00900337 /* Knock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Knock.m; sourceTree = "<group>"; };
+		0037C234191F10AD00900337 /* Knock.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Knock.plist; path = Package/Library/MobileSubstrate/DynamicLibraries/Knock.plist; sourceTree = "<group>"; };
+		0037C240191F10DA00900337 /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = ../../../../opt/iOSOpenDev/lib/libactivator.dylib; sourceTree = "<group>"; };
+		003B4F4B191F162E00E4C07D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		008E6372191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		008E6374191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		00E1D7A919200997008A26FD /* IOHIDDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDDisplay.h; sourceTree = "<group>"; };
+		00E1D7AA19200997008A26FD /* IOHIDEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEvent.h; sourceTree = "<group>"; };
+		00E1D7AB19200997008A26FD /* IOHIDEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventData.h; sourceTree = "<group>"; };
+		00E1D7AC19200997008A26FD /* IOHIDEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventQueue.h; sourceTree = "<group>"; };
+		00E1D7AD19200997008A26FD /* IOHIDEventSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventSystem.h; sourceTree = "<group>"; };
+		00E1D7AE19200997008A26FD /* IOHIDEventSystemClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventSystemClient.h; sourceTree = "<group>"; };
+		00E1D7AF19200997008A26FD /* IOHIDEventTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventTypes.h; sourceTree = "<group>"; };
+		00E1D7B019200997008A26FD /* IOHIDNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDNotification.h; sourceTree = "<group>"; };
+		00E1D7B119200997008A26FD /* IOHIDService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDService.h; sourceTree = "<group>"; };
+		00E1D7B219200997008A26FD /* IOHIDSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDSession.h; sourceTree = "<group>"; };
+		00E1D7B319200997008A26FD /* IOHIDUserDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDUserDevice.h; sourceTree = "<group>"; };
+		00E1D7B519200997008A26FD /* IOKitKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKitKeys.h; sourceTree = "<group>"; };
+		00E1D7B619200997008A26FD /* IOKitLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKitLib.h; sourceTree = "<group>"; };
+		00E1D7B719200997008A26FD /* IOReturn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOReturn.h; sourceTree = "<group>"; };
+		00E1D7B819200997008A26FD /* IOTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOTypes.h; sourceTree = "<group>"; };
+		00E1D7B919200997008A26FD /* OSKext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSKext.h; sourceTree = "<group>"; };
+		00E1D7BA19200997008A26FD /* OSMessageNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSMessageNotification.h; sourceTree = "<group>"; };
+		00E1D7CF19200A26008A26FD /* IOKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKit.h; sourceTree = "<group>"; };
+		00E1D7D119200DB6008A26FD /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0037C21D191F10AD00900337 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0037C242191F10DA00900337 /* libactivator.dylib in Frameworks */,
+				003B4F4C191F162E00E4C07D /* CoreMotion.framework in Frameworks */,
+				0037C225191F10AD00900337 /* Foundation.framework in Frameworks */,
+				00E1D7D219200DB6008A26FD /* IOKit.framework in Frameworks */,
+				0037C227191F10AD00900337 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0037C217191F10AD00900337 = {
+			isa = PBXGroup;
+			children = (
+				0037C228191F10AD00900337 /* Knock */,
+				0037C223191F10AD00900337 /* Frameworks */,
+				0037C222191F10AD00900337 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0037C222191F10AD00900337 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0037C221191F10AD00900337 /* Knock.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0037C223191F10AD00900337 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0037C240191F10DA00900337 /* libactivator.dylib */,
+				00E1D7D119200DB6008A26FD /* IOKit.framework */,
+				003B4F4B191F162E00E4C07D /* CoreMotion.framework */,
+				0037C224191F10AD00900337 /* Foundation.framework */,
+				0037C226191F10AD00900337 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0037C228191F10AD00900337 /* Knock */ = {
+			isa = PBXGroup;
+			children = (
+				0037C22F191F10AD00900337 /* Knock.m */,
+				0037C229191F10AD00900337 /* Package */,
+				0037C22D191F10AD00900337 /* Supporting Files */,
+			);
+			path = Knock;
+			sourceTree = "<group>";
+		};
+		0037C229191F10AD00900337 /* Package */ = {
+			isa = PBXGroup;
+			children = (
+				0037C22A191F10AD00900337 /* DEBIAN */,
+				0037C231191F10AD00900337 /* Library */,
+			);
+			name = Package;
+			sourceTree = "<group>";
+		};
+		0037C22A191F10AD00900337 /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				0037C22C191F10AD00900337 /* control */,
+			);
+			name = DEBIAN;
+			sourceTree = "<group>";
+		};
+		0037C22D191F10AD00900337 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				00E1D7A719200997008A26FD /* IOKit */,
+				0037C22E191F10AD00900337 /* PackageVersion.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0037C231191F10AD00900337 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				008E636F191FF99B00B31BEA /* Activator */,
+				0037C232191F10AD00900337 /* MobileSubstrate */,
+			);
+			name = Library;
+			sourceTree = "<group>";
+		};
+		0037C232191F10AD00900337 /* MobileSubstrate */ = {
+			isa = PBXGroup;
+			children = (
+				0037C233191F10AD00900337 /* DynamicLibraries */,
+			);
+			name = MobileSubstrate;
+			sourceTree = "<group>";
+		};
+		0037C233191F10AD00900337 /* DynamicLibraries */ = {
+			isa = PBXGroup;
+			children = (
+				0037C234191F10AD00900337 /* Knock.plist */,
+			);
+			name = DynamicLibraries;
+			sourceTree = "<group>";
+		};
+		008E636F191FF99B00B31BEA /* Activator */ = {
+			isa = PBXGroup;
+			children = (
+				008E6370191FF99B00B31BEA /* Events */,
+			);
+			name = Activator;
+			path = Package/Library/Activator;
+			sourceTree = "<group>";
+		};
+		008E6370191FF99B00B31BEA /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				008E6371191FF99B00B31BEA /* com.mhuusko5.Knock.front */,
+				008E6373191FF99B00B31BEA /* com.mhuusko5.Knock.side */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		008E6371191FF99B00B31BEA /* com.mhuusko5.Knock.front */ = {
+			isa = PBXGroup;
+			children = (
+				008E6372191FF99B00B31BEA /* Info.plist */,
+			);
+			path = com.mhuusko5.Knock.front;
+			sourceTree = "<group>";
+		};
+		008E6373191FF99B00B31BEA /* com.mhuusko5.Knock.side */ = {
+			isa = PBXGroup;
+			children = (
+				008E6374191FF99B00B31BEA /* Info.plist */,
+			);
+			path = com.mhuusko5.Knock.side;
+			sourceTree = "<group>";
+		};
+		00E1D7A719200997008A26FD /* IOKit */ = {
+			isa = PBXGroup;
+			children = (
+				00E1D7CF19200A26008A26FD /* IOKit.h */,
+				00E1D7A819200997008A26FD /* hid */,
+				00E1D7B519200997008A26FD /* IOKitKeys.h */,
+				00E1D7B619200997008A26FD /* IOKitLib.h */,
+				00E1D7B719200997008A26FD /* IOReturn.h */,
+				00E1D7B819200997008A26FD /* IOTypes.h */,
+				00E1D7B919200997008A26FD /* OSKext.h */,
+				00E1D7BA19200997008A26FD /* OSMessageNotification.h */,
+			);
+			path = IOKit;
+			sourceTree = "<group>";
+		};
+		00E1D7A819200997008A26FD /* hid */ = {
+			isa = PBXGroup;
+			children = (
+				00E1D7A919200997008A26FD /* IOHIDDisplay.h */,
+				00E1D7AA19200997008A26FD /* IOHIDEvent.h */,
+				00E1D7AB19200997008A26FD /* IOHIDEventData.h */,
+				00E1D7AC19200997008A26FD /* IOHIDEventQueue.h */,
+				00E1D7AD19200997008A26FD /* IOHIDEventSystem.h */,
+				00E1D7AE19200997008A26FD /* IOHIDEventSystemClient.h */,
+				00E1D7AF19200997008A26FD /* IOHIDEventTypes.h */,
+				00E1D7B019200997008A26FD /* IOHIDNotification.h */,
+				00E1D7B119200997008A26FD /* IOHIDService.h */,
+				00E1D7B219200997008A26FD /* IOHIDSession.h */,
+				00E1D7B319200997008A26FD /* IOHIDUserDevice.h */,
+			);
+			path = hid;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0037C21E191F10AD00900337 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00E1D7BD19200997008A26FD /* IOHIDEventData.h in Headers */,
+				00E1D7C319200997008A26FD /* IOHIDService.h in Headers */,
+				00E1D7BB19200997008A26FD /* IOHIDDisplay.h in Headers */,
+				00E1D7C519200997008A26FD /* IOHIDUserDevice.h in Headers */,
+				00E1D7BC19200997008A26FD /* IOHIDEvent.h in Headers */,
+				00E1D7CC19200997008A26FD /* OSMessageNotification.h in Headers */,
+				00E1D7C019200997008A26FD /* IOHIDEventSystemClient.h in Headers */,
+				00E1D7C119200997008A26FD /* IOHIDEventTypes.h in Headers */,
+				00E1D7CB19200997008A26FD /* OSKext.h in Headers */,
+				00E1D7D019200A26008A26FD /* IOKit.h in Headers */,
+				00E1D7C919200997008A26FD /* IOReturn.h in Headers */,
+				00E1D7C219200997008A26FD /* IOHIDNotification.h in Headers */,
+				00E1D7BE19200997008A26FD /* IOHIDEventQueue.h in Headers */,
+				00E1D7C819200997008A26FD /* IOKitLib.h in Headers */,
+				00E1D7CA19200997008A26FD /* IOTypes.h in Headers */,
+				00E1D7BF19200997008A26FD /* IOHIDEventSystem.h in Headers */,
+				00E1D7C719200997008A26FD /* IOKitKeys.h in Headers */,
+				00E1D7C419200997008A26FD /* IOHIDSession.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0037C220191F10AD00900337 /* Knock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0037C23D191F10AD00900337 /* Build configuration list for PBXNativeTarget "Knock" */;
+			buildPhases = (
+				0037C21C191F10AD00900337 /* Sources */,
+				0037C21D191F10AD00900337 /* Frameworks */,
+				0037C21E191F10AD00900337 /* Headers */,
+				0037C21F191F10AD00900337 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Knock;
+			productName = Knock;
+			productReference = 0037C221191F10AD00900337 /* Knock.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0037C218191F10AD00900337 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = 0037C21B191F10AD00900337 /* Build configuration list for PBXProject "Knock" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0037C217191F10AD00900337;
+			productRefGroup = 0037C222191F10AD00900337 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0037C220191F10AD00900337 /* Knock */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0037C21F191F10AD00900337 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod --xcbp";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0037C21C191F10AD00900337 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0037C230191F10AD00900337 /* Knock.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0037C23B191F10AD00900337 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Debug;
+		};
+		0037C23C191F10AD00900337 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Release;
+		};
+		0037C23E191F10AD00900337 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/iOSOpenDev/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = 169.254.7.174;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		0037C23F191F10AD00900337 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/iOSOpenDev/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = 169.254.7.174;
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0037C21B191F10AD00900337 /* Build configuration list for PBXProject "Knock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0037C23B191F10AD00900337 /* Debug */,
+				0037C23C191F10AD00900337 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0037C23D191F10AD00900337 /* Build configuration list for PBXNativeTarget "Knock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0037C23E191F10AD00900337 /* Debug */,
+				0037C23F191F10AD00900337 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0037C218191F10AD00900337 /* Project object */;
+}
