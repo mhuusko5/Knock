@@ -12,6 +12,8 @@
 		0037C230191F10AD00900337 /* Knock.m in Sources */ = {isa = PBXBuildFile; fileRef = 0037C22F191F10AD00900337 /* Knock.m */; };
 		0037C242191F10DA00900337 /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C240191F10DA00900337 /* libactivator.dylib */; };
 		003B4F4C191F162E00E4C07D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 003B4F4B191F162E00E4C07D /* CoreMotion.framework */; };
+		00A3AC6D192175A4001C725A /* KEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 00A3AC6B192175A4001C725A /* KEvent.h */; };
+		00A3AC6E192175A4001C725A /* KEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A3AC6C192175A4001C725A /* KEvent.m */; };
 		00E1D7BB19200997008A26FD /* IOHIDDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7A919200997008A26FD /* IOHIDDisplay.h */; };
 		00E1D7BC19200997008A26FD /* IOHIDEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AA19200997008A26FD /* IOHIDEvent.h */; };
 		00E1D7BD19200997008A26FD /* IOHIDEventData.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7AB19200997008A26FD /* IOHIDEventData.h */; };
@@ -45,6 +47,8 @@
 		003B4F4B191F162E00E4C07D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		008E6372191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		008E6374191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		00A3AC6B192175A4001C725A /* KEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KEvent.h; sourceTree = "<group>"; };
+		00A3AC6C192175A4001C725A /* KEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KEvent.m; sourceTree = "<group>"; };
 		00E1D7A919200997008A26FD /* IOHIDDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDDisplay.h; sourceTree = "<group>"; };
 		00E1D7AA19200997008A26FD /* IOHIDEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEvent.h; sourceTree = "<group>"; };
 		00E1D7AB19200997008A26FD /* IOHIDEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOHIDEventData.h; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 			isa = PBXGroup;
 			children = (
 				0037C22F191F10AD00900337 /* Knock.m */,
+				00A3AC6B192175A4001C725A /* KEvent.h */,
+				00A3AC6C192175A4001C725A /* KEvent.m */,
 				0037C229191F10AD00900337 /* Package */,
 				0037C22D191F10AD00900337 /* Supporting Files */,
 			);
@@ -264,6 +270,7 @@
 				00E1D7BF19200997008A26FD /* IOHIDEventSystem.h in Headers */,
 				00E1D7C719200997008A26FD /* IOKitKeys.h in Headers */,
 				00E1D7C419200997008A26FD /* IOHIDSession.h in Headers */,
+				00A3AC6D192175A4001C725A /* KEvent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0037C230191F10AD00900337 /* Knock.m in Sources */,
+				00A3AC6E192175A4001C725A /* KEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,7 +409,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 169.254.7.174;
+				iOSOpenDevDevice = 192.168.1.143;
 				iOSOpenDevInstallOnAnyBuild = NO;
 				iOSOpenDevInstallOnProfiling = YES;
 				iOSOpenDevRespringOnInstall = YES;
@@ -423,7 +431,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
-				iOSOpenDevDevice = 169.254.7.174;
+				iOSOpenDevDevice = 192.168.1.143;
 				iOSOpenDevInstallOnAnyBuild = NO;
 				iOSOpenDevInstallOnProfiling = YES;
 				iOSOpenDevRespringOnInstall = YES;
