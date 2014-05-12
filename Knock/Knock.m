@@ -6,12 +6,32 @@
 
 IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
 
-static float KFilteringFactor = 0.3;
-static float KDeltaMinimum = 1.0;
+static float KFilteringFactor = 0.1;
 static float KAccelUpdateInterval = 1 / 100.0;
-static NSString *KEventNameTop = @"com.mhuusko5.Knock.top";
 static NSString *KEventNameSide = @"com.mhuusko5.Knock.side";
 static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
+
+@interface KEvent : NSObject
+
+@property NSString *event;
+@property float delta;
+
+- (id)initWithEvent:(NSString *)event delta:(float)delta;
+
+@end
+
+@implementation KEvent
+
+- (id)initWithEvent:(NSString *)event delta:(float)delta {
+	self = [super init];
+
+	_event = event;
+	_delta = delta;
+
+	return self;
+}
+
+@end
 
 @interface Knock : NSObject
 
@@ -19,8 +39,9 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 @property CMAcceleration newAcceleration;
 @property float currentAccelX, currentAccelY, currentAccelZ;
 @property int screenStateToken;
-@property NSDate *lastEventSend;
 @property NSDate *lastScreenActivity;
+@property NSMutableArray *possibleEvents;
+@property NSDate *lastEventPick;
 
 @end
 
@@ -43,32 +64,35 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 - (id)init {
 	self = [super init];
 
-    _lastEventSend = [NSDate date];
-    _lastScreenActivity = [NSDate date];
+	_lastScreenActivity = [NSDate date];
+
+	_possibleEvents = [NSMutableArray array];
+	_lastEventPick = [NSDate date];
 
 	[self startListeningForKnock];
 
-    notify_register_dispatch("com.apple.springboard.hasBlankedScreen", &_screenStateToken, dispatch_get_main_queue(), ^(int t) {
+	notify_register_dispatch("com.apple.springboard.hasBlankedScreen", &_screenStateToken, dispatch_get_main_queue(), ^(int t) {
 	    uint64_t state;
 	    notify_get_state(_screenStateToken, &state);
 	    if ((int)state == 1) {
-            [[Knock sharedInstance] stopListeningForKnock];
-        } else {
-            [[Knock sharedInstance] startListeningForKnock];
-        }
+	        [[Knock sharedInstance] stopListeningForKnock];
+		}
+	    else {
+	        [[Knock sharedInstance] startListeningForKnock];
+		}
 	});
 
-    IOHIDEventSystemClientRef ioHIDEventSystem = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
-    IOHIDEventSystemClientScheduleWithRunLoop(ioHIDEventSystem, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    IOHIDEventSystemClientRegisterEventCallback(ioHIDEventSystem, handleSystemHIDEvent, NULL, NULL);
+	IOHIDEventSystemClientRef ioHIDEventSystem = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
+	IOHIDEventSystemClientScheduleWithRunLoop(ioHIDEventSystem, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+	IOHIDEventSystemClientRegisterEventCallback(ioHIDEventSystem, handleSystemHIDEvent, NULL, NULL);
 
 	return self;
 }
 
-void handleSystemHIDEvent(void* target, void* refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
-    if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
-        [[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
-    }
+void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
+	if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
+		[[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
+	}
 }
 
 - (void)stopListeningForKnock {
@@ -93,15 +117,25 @@ void handleSystemHIDEvent(void* target, void* refcon, IOHIDEventQueueRef queue, 
 	}
 }
 
-- (void)checkPossibleEventWithDelta:(float)accelDelta name:(NSString *)eventName {
-    if ([self.lastEventSend timeIntervalSinceNow] * -1000 > 250 && [self.lastScreenActivity timeIntervalSinceNow] * -1000 > 200) {
-        if ([eventName isEqualToString:KEventNameTop]) {
-            eventName = KEventNameSide;
-        }
+- (void)checkPossibleEvents {
+	NSArray *sortedEvents = [self.possibleEvents sortedArrayUsingComparator: ^NSComparisonResult (KEvent *event1, KEvent *event2) {
+	    return [@(event2.delta)compare: @(event1.delta)];
+	}];
 
-        [LASharedActivator sendEventToListener:[LAEvent eventWithName:eventName mode:[LASharedActivator currentEventMode]]];
+    self.possibleEvents = [NSMutableArray array];
 
-        self.lastEventSend = [NSDate date];
+	KEvent *mostForcefulEvent = sortedEvents[0];
+
+	[LASharedActivator sendEventToListener:[LAEvent eventWithName:mostForcefulEvent.event mode:[LASharedActivator currentEventMode]]];
+}
+
+- (void)storePossibleEventWithDelta:(float)accelDelta name:(NSString *)eventName {
+    [self.possibleEvents addObject:[[KEvent alloc] initWithEvent:eventName delta:accelDelta]];
+
+    if ([self.lastEventPick timeIntervalSinceNow] * -1000 > 150 && self.possibleEvents.count > 0) {
+        [self checkPossibleEvents];
+
+        self.lastEventPick = [NSDate date];
     }
 }
 
@@ -115,19 +149,19 @@ void handleSystemHIDEvent(void* target, void* refcon, IOHIDEventQueueRef queue, 
 	self.currentAccelY = newAcceleration.y - ((newAcceleration.y * KFilteringFactor) + (self.currentAccelY * (1.0 - KFilteringFactor)));
 	self.currentAccelZ = newAcceleration.z - ((newAcceleration.z * KFilteringFactor) + (self.currentAccelZ * (1.0 - KFilteringFactor)));
 
-	float deltaX = ABS(self.currentAccelX - prevAccelX);
-	float deltaY = ABS(self.currentAccelY - prevAccelY);
-	float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
+    if ([self.lastScreenActivity timeIntervalSinceNow] * -1000 > 500) {
+        float deltaX = ABS(self.currentAccelX - prevAccelX);
+        float deltaY = ABS(self.currentAccelY - prevAccelY);
+        float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
 
-	if (deltaX > KDeltaMinimum * 0.95 && deltaX > deltaY && deltaX > deltaZ) {
-		[self checkPossibleEventWithDelta:deltaX name:KEventNameSide];
-	}
-	else if (deltaY > KDeltaMinimum * 0.95 && deltaY > deltaX && deltaY > deltaZ) {
-		[self checkPossibleEventWithDelta:deltaY name:KEventNameTop];
-	}
-	else if (deltaZ > KDeltaMinimum * 1.05 && deltaZ > deltaX && deltaZ > deltaY) {
-		[self checkPossibleEventWithDelta:deltaZ name:KEventNameFront];
-	}
+        if (deltaX > 1.1) {
+            [self storePossibleEventWithDelta:deltaX name:KEventNameSide];
+        }
+
+        if (deltaZ > 1.8) {
+            [self storePossibleEventWithDelta:deltaZ name:KEventNameFront];
+        }
+    }
 }
 
 @end
