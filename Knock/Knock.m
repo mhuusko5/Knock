@@ -8,9 +8,11 @@
 IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
 
 static float KFilteringFactor = 0.25;
-static float KMinimumSideDelta = 1.1;
+static float KMinimumSideDelta = 0.85;
 static float KMinimumFrontDelta = 0.9;
 static float KAccelUpdateInterval = 0.01;
+static float KMaximumAlternateAccel = 1.0;
+static float KMinimumIntervalSinceMaxAltAccel = 0.2;
 static NSString *KEventNameSide = @"com.mhuusko5.Knock.side";
 static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 
@@ -22,62 +24,73 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 @property int screenStateToken;
 @property NSDate *lastScreenActivity;
 @property NSMutableArray *possibleEvents;
-@property NSDate *lastEventPick;
+@property NSDate *lastMaxXAccel, *lastMaxYAccel, *lastMaxZAccel;
 
 @end
 
 @implementation Knock
 
-- (void)checkAcceleration {
-    if (-[self.lastScreenActivity timeIntervalSinceNow] < 0.5) {
-        return;
-    }
-
-    CMAcceleration acceleration = self.motionManager.accelerometerData.acceleration;
-    float prevAccelX = self.currentAccelX;
-    float prevAccelY = self.currentAccelY;
-    float prevAccelZ = self.currentAccelZ;
-    self.currentAccelX = acceleration.x - ((acceleration.x * KFilteringFactor) + (prevAccelX * (1.0 - KFilteringFactor)));
-    self.currentAccelY = acceleration.y - ((acceleration.y * KFilteringFactor) + (prevAccelY * (1.0 - KFilteringFactor)));
-    self.currentAccelZ = acceleration.z - ((acceleration.z * KFilteringFactor) + (prevAccelZ * (1.0 - KFilteringFactor)));
-
-    if (-[self.lastEventPick timeIntervalSinceNow] < 0.33) {
-        return;
-    }
-
+- (void)checkPossibleEvents {
     if (self.possibleEvents.count > 0) {
-        NSArray *sortedEvents = [self.possibleEvents sortedArrayUsingComparator: ^NSComparisonResult (KEvent *event1, KEvent *event2) {
-            return [@(event2.score)compare : @(event1.score)];
-        }];
-
-        for (int i = 0; i < sortedEvents.count; i++) {
-            NSLog(@"%@ %f", [sortedEvents[i] name], [sortedEvents[i] score]);
-        }
-
-        [LASharedActivator sendEventToListener:[LAEvent eventWithName:[sortedEvents[0] name] mode:[LASharedActivator currentEventMode]]];
+		NSArray *sortedEvents = [self.possibleEvents sortedArrayUsingComparator: ^NSComparisonResult (KEvent *event1, KEvent *event2) {
+		    return [@(event2.score)compare : @(event1.score)];
+		}];
 
         self.possibleEvents = [NSMutableArray array];
-        self.lastEventPick = [NSDate date];
 
-        return;
-    }
+        NSString *eventName = [sortedEvents[0] name];
 
-    float deltaX = ABS(self.currentAccelX - prevAccelX);
-    float deltaY = ABS(self.currentAccelY - prevAccelY);
-    float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
+        if (([eventName isEqualToString:KEventNameFront] && (-[self.lastMaxXAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel)) || ([eventName isEqualToString:KEventNameSide] && (-[self.lastMaxZAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel))) {
+            return;
+        }
 
-    if (deltaX > KMinimumSideDelta) {
-        [self.possibleEvents addObject:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
-    }
+        NSLog(@"%@ %f", [sortedEvents[0] name], [sortedEvents[0] score]);
 
-    if (deltaZ > KMinimumFrontDelta) {
-        [self.possibleEvents addObject:[[KEvent alloc] initWithName:KEventNameFront score:deltaZ / KMinimumFrontDelta]];
-    }
+        [LASharedActivator sendEventToListener:[LAEvent eventWithName:[sortedEvents[0] name] mode:[LASharedActivator currentEventMode]]];
+	}
 }
 
-void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
-	if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
-		[[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
+- (void)addPossibleEvent:(KEvent *)event {
+    [self.possibleEvents addObject:event];
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(checkPossibleEvents) withObject:nil afterDelay:0.05];
+}
+
+- (void)checkAcceleration {
+	if (-[self.lastScreenActivity timeIntervalSinceNow] < 0.5) {
+		return;
+	}
+
+	CMAcceleration acceleration = self.motionManager.accelerometerData.acceleration;
+	float prevAccelX = self.currentAccelX;
+	float prevAccelY = self.currentAccelY;
+	float prevAccelZ = self.currentAccelZ;
+	self.currentAccelX = acceleration.x - ((acceleration.x * KFilteringFactor) + (prevAccelX * (1.0 - KFilteringFactor)));
+	self.currentAccelY = acceleration.y - ((acceleration.y * KFilteringFactor) + (prevAccelY * (1.0 - KFilteringFactor)));
+	self.currentAccelZ = acceleration.z - ((acceleration.z * KFilteringFactor) + (prevAccelZ * (1.0 - KFilteringFactor)));
+    float deltaX = ABS(self.currentAccelX - prevAccelX);
+	float deltaY = ABS(self.currentAccelY - prevAccelY);
+	float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
+
+    if (ABS(self.currentAccelX) > KMaximumAlternateAccel) {
+        self.lastMaxXAccel = [NSDate date];
+    }
+
+    if (ABS(self.currentAccelY) > KMaximumAlternateAccel) {
+        self.lastMaxYAccel = [NSDate date];
+    }
+
+    if (ABS(self.currentAccelZ) > KMaximumAlternateAccel) {
+        self.lastMaxZAccel = [NSDate date];
+    }
+
+	if (deltaX > KMinimumSideDelta) {
+        [self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
+	}
+
+	if (deltaZ > KMinimumFrontDelta) {
+		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameFront score:deltaZ / KMinimumFrontDelta]];
 	}
 }
 
@@ -85,9 +98,9 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 	if (!self.motionManager) {
 		self.motionManager = [CMMotionManager new];
 		self.motionManager.accelerometerUpdateInterval = KAccelUpdateInterval;
-        [self.motionManager startAccelerometerUpdates];
+		[self.motionManager startAccelerometerUpdates];
 
-        self.accelCheckTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(checkAcceleration) userInfo:nil repeats:YES];
+		self.accelCheckTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(checkAcceleration) userInfo:nil repeats:YES];
 	}
 }
 
@@ -96,8 +109,15 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 		[self.motionManager stopAccelerometerUpdates];
 		self.motionManager = nil;
 
-        [self.accelCheckTimer invalidate];
-        self.accelCheckTimer = nil;
+		[self.accelCheckTimer invalidate];
+		self.accelCheckTimer = nil;
+	}
+}
+
+void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
+	if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
+		[[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
+        [NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
 	}
 }
 
@@ -107,9 +127,12 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 	_lastScreenActivity = [NSDate date];
 
 	_possibleEvents = [NSMutableArray array];
-	_lastEventPick = [NSDate date];
 
-    _currentAccelX = _currentAccelY = _currentAccelZ = 0;
+	_currentAccelX = _currentAccelY = _currentAccelZ = 0;
+
+    _lastMaxXAccel = [NSDate date];
+    _lastMaxYAccel = [NSDate date];
+    _lastMaxZAccel = [NSDate date];
 
 	[self startListeningForKnock];
 
@@ -132,11 +155,12 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 }
 
 + (id)sharedInstance {
-	static id knockInstance = nil;
-	if (!knockInstance) {
-		knockInstance = [Knock new];
-	}
-	return knockInstance;
+	static dispatch_once_t once;
+	static id instance;
+	dispatch_once(&once, ^{
+	    instance = self.new;
+	});
+	return instance;
 }
 
 + (void)load {
