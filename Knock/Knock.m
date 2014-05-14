@@ -1,4 +1,5 @@
 #import <libactivator/libactivator.h>
+#import <substrate.h>
 #import <notify.h>
 #import <CoreMotion/CoreMotion.h>
 #include "IOHIDEventSystem.h"
@@ -13,6 +14,7 @@ static float KMinimumFrontDelta = 0.9;
 static float KAccelUpdateInterval = 0.01;
 static float KMaximumAlternateAccel = 1.0;
 static float KMinimumIntervalSinceMaxAltAccel = 0.2;
+static float KMaximumCurrentAcceleration = 0.4;
 static NSString *KEventNameSide = @"com.mhuusko5.Knock.side";
 static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 
@@ -31,30 +33,32 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 @implementation Knock
 
 - (void)checkPossibleEvents {
-    if (self.possibleEvents.count > 0) {
+	if (self.possibleEvents.count > 0) {
 		NSArray *sortedEvents = [self.possibleEvents sortedArrayUsingComparator: ^NSComparisonResult (KEvent *event1, KEvent *event2) {
 		    return [@(event2.score)compare : @(event1.score)];
 		}];
 
-        self.possibleEvents = [NSMutableArray array];
+		self.possibleEvents = [NSMutableArray array];
 
-        NSString *eventName = [sortedEvents[0] name];
+		NSString *eventName = [sortedEvents[0] name];
 
-        if (([eventName isEqualToString:KEventNameFront] && (-[self.lastMaxXAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel)) || ([eventName isEqualToString:KEventNameSide] && (-[self.lastMaxZAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel))) {
+		if (([eventName isEqualToString:KEventNameFront] && (-[self.lastMaxXAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel)) || ([eventName isEqualToString:KEventNameSide] && (-[self.lastMaxZAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel || -[self.lastMaxYAccel timeIntervalSinceNow] < KMinimumIntervalSinceMaxAltAccel))) {
+			return;
+		}
+
+        if (([eventName isEqualToString:KEventNameFront] && ABS(self.currentAccelZ) > KMaximumCurrentAcceleration) || ([eventName isEqualToString:KEventNameSide] && ABS(self.currentAccelX) > KMaximumCurrentAcceleration * 1.2)) {
             return;
         }
 
-        NSLog(@"%@ %f", [sortedEvents[0] name], [sortedEvents[0] score]);
-
-        [LASharedActivator sendEventToListener:[LAEvent eventWithName:[sortedEvents[0] name] mode:[LASharedActivator currentEventMode]]];
+		[LASharedActivator sendEventToListener:[LAEvent eventWithName:eventName mode:[LASharedActivator currentEventMode]]];
 	}
 }
 
 - (void)addPossibleEvent:(KEvent *)event {
-    [self.possibleEvents addObject:event];
+	[self.possibleEvents addObject:event];
 
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self performSelector:@selector(checkPossibleEvents) withObject:nil afterDelay:0.05];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	[self performSelector:@selector(checkPossibleEvents) withObject:nil afterDelay:0.05];
 }
 
 - (void)checkAcceleration {
@@ -69,27 +73,27 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 	self.currentAccelX = acceleration.x - ((acceleration.x * KFilteringFactor) + (prevAccelX * (1.0 - KFilteringFactor)));
 	self.currentAccelY = acceleration.y - ((acceleration.y * KFilteringFactor) + (prevAccelY * (1.0 - KFilteringFactor)));
 	self.currentAccelZ = acceleration.z - ((acceleration.z * KFilteringFactor) + (prevAccelZ * (1.0 - KFilteringFactor)));
-    float deltaX = ABS(self.currentAccelX - prevAccelX);
+	float deltaX = ABS(self.currentAccelX - prevAccelX);
 	float deltaY = ABS(self.currentAccelY - prevAccelY);
 	float deltaZ = ABS(self.currentAccelZ - prevAccelZ);
 
-    if (ABS(self.currentAccelX) > KMaximumAlternateAccel) {
-        self.lastMaxXAccel = [NSDate date];
-    }
-
-    if (ABS(self.currentAccelY) > KMaximumAlternateAccel) {
-        self.lastMaxYAccel = [NSDate date];
-    }
-
-    if (ABS(self.currentAccelZ) > KMaximumAlternateAccel) {
-        self.lastMaxZAccel = [NSDate date];
-    }
-
-	if (deltaX > KMinimumSideDelta) {
-        [self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
+	if (ABS(self.currentAccelX) > KMaximumAlternateAccel) {
+		self.lastMaxXAccel = [NSDate date];
 	}
 
-	if (deltaZ > KMinimumFrontDelta) {
+	if (ABS(self.currentAccelY) > KMaximumAlternateAccel) {
+		self.lastMaxYAccel = [NSDate date];
+	}
+
+	if (ABS(self.currentAccelZ) > KMaximumAlternateAccel) {
+		self.lastMaxZAccel = [NSDate date];
+	}
+
+	if (deltaX > KMinimumSideDelta) {
+		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
+	}
+
+	if (deltaZ > KMinimumFrontDelta && deltaX > 0.15) {
 		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameFront score:deltaZ / KMinimumFrontDelta]];
 	}
 }
@@ -116,8 +120,8 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 
 void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
 	if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
 		[[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
-        [NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
 	}
 }
 
@@ -130,9 +134,9 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 
 	_currentAccelX = _currentAccelY = _currentAccelZ = 0;
 
-    _lastMaxXAccel = [NSDate date];
-    _lastMaxYAccel = [NSDate date];
-    _lastMaxZAccel = [NSDate date];
+	_lastMaxXAccel = [NSDate date];
+	_lastMaxYAccel = [NSDate date];
+	_lastMaxZAccel = [NSDate date];
 
 	[self startListeningForKnock];
 
@@ -140,6 +144,7 @@ void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, 
 	    uint64_t state;
 	    notify_get_state(_screenStateToken, &state);
 	    if ((int)state == 1) {
+	        [NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
 	        [[Knock sharedInstance] stopListeningForKnock];
 		}
 	    else {

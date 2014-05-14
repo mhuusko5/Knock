@@ -1,6 +1,6 @@
 Package: com.mhuusko5.Knock
 Name: Knock
-Version: 1.0-1
+Version: 0.9-1
 Description: Trigger Activator actions with a knock/hard tap on your iOS device.
 Section: System
 Depends: firmware (>= 7.0), mobilesubstrate, libactivator
