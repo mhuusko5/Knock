@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0025C43B1923AAE300F9E5B7 /* libsubstrate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0025C43A1923AAE300F9E5B7 /* libsubstrate.dylib */; };
 		0037C225191F10AD00900337 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C224191F10AD00900337 /* Foundation.framework */; };
 		0037C227191F10AD00900337 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C226191F10AD00900337 /* UIKit.framework */; };
 		0037C230191F10AD00900337 /* Knock.m in Sources */ = {isa = PBXBuildFile; fileRef = 0037C22F191F10AD00900337 /* Knock.m */; };
 		0037C242191F10DA00900337 /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0037C240191F10DA00900337 /* libactivator.dylib */; };
 		003B4F4C191F162E00E4C07D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 003B4F4B191F162E00E4C07D /* CoreMotion.framework */; };
+		008358FF1923FFAA0028C2F5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008358FE1923FFAA0028C2F5 /* AudioToolbox.framework */; };
+		00835902192403AB0028C2F5 /* KVibrateListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 00835900192403AB0028C2F5 /* KVibrateListener.h */; };
+		00835903192403AB0028C2F5 /* KVibrateListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 00835901192403AB0028C2F5 /* KVibrateListener.m */; };
 		00A3AC6D192175A4001C725A /* KEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 00A3AC6B192175A4001C725A /* KEvent.h */; };
 		00A3AC6E192175A4001C725A /* KEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A3AC6C192175A4001C725A /* KEvent.m */; };
 		00E1D7BB19200997008A26FD /* IOHIDDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 00E1D7A919200997008A26FD /* IOHIDDisplay.h */; };
@@ -36,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0025C43A1923AAE300F9E5B7 /* libsubstrate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsubstrate.dylib; path = ../../../../opt/iOSOpenDev/lib/libsubstrate.dylib; sourceTree = "<group>"; };
 		0037C221191F10AD00900337 /* Knock.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Knock.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		0037C224191F10AD00900337 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0037C226191F10AD00900337 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -45,6 +50,9 @@
 		0037C234191F10AD00900337 /* Knock.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Knock.plist; path = Package/Library/MobileSubstrate/DynamicLibraries/Knock.plist; sourceTree = "<group>"; };
 		0037C240191F10DA00900337 /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = ../../../../opt/iOSOpenDev/lib/libactivator.dylib; sourceTree = "<group>"; };
 		003B4F4B191F162E00E4C07D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		008358FE1923FFAA0028C2F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00835900192403AB0028C2F5 /* KVibrateListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVibrateListener.h; sourceTree = "<group>"; };
+		00835901192403AB0028C2F5 /* KVibrateListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVibrateListener.m; sourceTree = "<group>"; };
 		008E6372191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		008E6374191FF99B00B31BEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		00A3AC6B192175A4001C725A /* KEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KEvent.h; sourceTree = "<group>"; };
@@ -75,7 +83,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0025C43B1923AAE300F9E5B7 /* libsubstrate.dylib in Frameworks */,
 				0037C242191F10DA00900337 /* libactivator.dylib in Frameworks */,
+				008358FF1923FFAA0028C2F5 /* AudioToolbox.framework in Frameworks */,
 				003B4F4C191F162E00E4C07D /* CoreMotion.framework in Frameworks */,
 				0037C225191F10AD00900337 /* Foundation.framework in Frameworks */,
 				00E1D7D219200DB6008A26FD /* IOKit.framework in Frameworks */,
@@ -106,7 +116,9 @@
 		0037C223191F10AD00900337 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0025C43A1923AAE300F9E5B7 /* libsubstrate.dylib */,
 				0037C240191F10DA00900337 /* libactivator.dylib */,
+				008358FE1923FFAA0028C2F5 /* AudioToolbox.framework */,
 				00E1D7D119200DB6008A26FD /* IOKit.framework */,
 				003B4F4B191F162E00E4C07D /* CoreMotion.framework */,
 				0037C224191F10AD00900337 /* Foundation.framework */,
@@ -119,6 +131,8 @@
 			isa = PBXGroup;
 			children = (
 				0037C22F191F10AD00900337 /* Knock.m */,
+				00835900192403AB0028C2F5 /* KVibrateListener.h */,
+				00835901192403AB0028C2F5 /* KVibrateListener.m */,
 				00A3AC6B192175A4001C725A /* KEvent.h */,
 				00A3AC6C192175A4001C725A /* KEvent.m */,
 				0037C229191F10AD00900337 /* Package */,
@@ -266,6 +280,7 @@
 				00E1D7C219200997008A26FD /* IOHIDNotification.h in Headers */,
 				00E1D7BE19200997008A26FD /* IOHIDEventQueue.h in Headers */,
 				00E1D7C819200997008A26FD /* IOKitLib.h in Headers */,
+				00835902192403AB0028C2F5 /* KVibrateListener.h in Headers */,
 				00E1D7CA19200997008A26FD /* IOTypes.h in Headers */,
 				00E1D7BF19200997008A26FD /* IOHIDEventSystem.h in Headers */,
 				00E1D7C719200997008A26FD /* IOKitKeys.h in Headers */,
@@ -342,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0037C230191F10AD00900337 /* Knock.m in Sources */,
+				00835903192403AB0028C2F5 /* KVibrateListener.m in Sources */,
 				00A3AC6E192175A4001C725A /* KEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

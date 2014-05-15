@@ -5,18 +5,24 @@
 #include "IOHIDEventSystem.h"
 #include "IOHIDEventSystemClient.h"
 #import "KEvent.h"
+#import "KVibrateListener.h"
 
 IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
 
 static float KFilteringFactor = 0.25;
-static float KMinimumSideDelta = 0.85;
-static float KMinimumFrontDelta = 0.9;
+static float KMinimumSideDelta = 0.75;
+static float KMinimumFrontDelta = 0.7;
 static float KAccelUpdateInterval = 0.01;
 static float KMaximumAlternateAccel = 1.0;
-static float KMinimumIntervalSinceMaxAltAccel = 0.2;
+static float KMinimumIntervalSinceMaxAltAccel = 0.25;
 static float KMaximumCurrentAcceleration = 0.4;
 static NSString *KEventNameSide = @"com.mhuusko5.Knock.side";
 static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
+
+@interface SBAlertItemsController : NSObject
++(id)sharedInstance;
+-(id)visibleAlertItem;
+@end
 
 @interface Knock : NSObject
 
@@ -24,7 +30,7 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 @property NSTimer *accelCheckTimer;
 @property float currentAccelX, currentAccelY, currentAccelZ;
 @property int screenStateToken;
-@property NSDate *lastScreenActivity;
+@property NSDate *lastDeviceActivity;
 @property NSMutableArray *possibleEvents;
 @property NSDate *lastMaxXAccel, *lastMaxYAccel, *lastMaxZAccel;
 
@@ -46,7 +52,11 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 			return;
 		}
 
-        if (([eventName isEqualToString:KEventNameFront] && ABS(self.currentAccelZ) > KMaximumCurrentAcceleration) || ([eventName isEqualToString:KEventNameSide] && ABS(self.currentAccelX) > KMaximumCurrentAcceleration * 1.2)) {
+		if (([eventName isEqualToString:KEventNameFront] && ABS(self.currentAccelZ) > KMaximumCurrentAcceleration) || ([eventName isEqualToString:KEventNameSide] && ABS(self.currentAccelX) > KMaximumCurrentAcceleration * 1.2)) {
+			return;
+		}
+
+        if ([[[[objc_getClass("SBAlertItemsController") performSelector:@selector(sharedInstance)] performSelector:@selector(visibleAlertItem)] performSelector:@selector(sound)] performSelector:@selector(vibrationPattern)]) {
             return;
         }
 
@@ -62,7 +72,7 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 }
 
 - (void)checkAcceleration {
-	if (-[self.lastScreenActivity timeIntervalSinceNow] < 0.5) {
+	if (-[self.lastDeviceActivity timeIntervalSinceNow] < 0.5) {
 		return;
 	}
 
@@ -93,7 +103,7 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
 	}
 
-	if (deltaZ > KMinimumFrontDelta && deltaX > 0.15) {
+	if (deltaZ > KMinimumFrontDelta) {
 		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameFront score:deltaZ / KMinimumFrontDelta]];
 	}
 }
@@ -121,48 +131,59 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 void handleSystemHIDEvent(void *target, void *refcon, IOHIDEventQueueRef queue, IOHIDEventRef event) {
 	if (IOHIDEventGetType(event) == kIOHIDEventTypeDigitizer) {
 		[NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
-		[[Knock sharedInstance] setLastScreenActivity:[NSDate date]];
+		[[Knock sharedInstance] setLastDeviceActivity:[NSDate date]];
 	}
+}
+
+static void deviceVibrated() {
+	[NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
+	[[Knock sharedInstance] setLastDeviceActivity:[NSDate date]];
 }
 
 - (id)init {
 	self = [super init];
 
-	_lastScreenActivity = [NSDate date];
+	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"]) {
+		_lastDeviceActivity = [NSDate date];
 
-	_possibleEvents = [NSMutableArray array];
+		_possibleEvents = [NSMutableArray array];
 
-	_currentAccelX = _currentAccelY = _currentAccelZ = 0;
+		_currentAccelX = _currentAccelY = _currentAccelZ = 0;
 
-	_lastMaxXAccel = [NSDate date];
-	_lastMaxYAccel = [NSDate date];
-	_lastMaxZAccel = [NSDate date];
+		_lastMaxXAccel = [NSDate date];
+		_lastMaxYAccel = [NSDate date];
+		_lastMaxZAccel = [NSDate date];
 
-	[self startListeningForKnock];
+		[self startListeningForKnock];
 
-	notify_register_dispatch("com.apple.springboard.hasBlankedScreen", &_screenStateToken, dispatch_get_main_queue(), ^(int t) {
-	    uint64_t state;
-	    notify_get_state(_screenStateToken, &state);
-	    if ((int)state == 1) {
-	        [NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
-	        [[Knock sharedInstance] stopListeningForKnock];
-		}
-	    else {
-	        [[Knock sharedInstance] startListeningForKnock];
-		}
-	});
+		notify_register_dispatch("com.apple.springboard.hasBlankedScreen", &_screenStateToken, dispatch_get_main_queue(), ^(int t) {
+		    uint64_t state;
+		    notify_get_state(_screenStateToken, &state);
+		    if ((int)state == 1) {
+		        [NSObject cancelPreviousPerformRequestsWithTarget:[Knock sharedInstance]];
+		        [[Knock sharedInstance] stopListeningForKnock];
+			}
+		    else {
+		        [[Knock sharedInstance] startListeningForKnock];
+			}
+		});
 
-	IOHIDEventSystemClientRef ioHIDEventSystem = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
-	IOHIDEventSystemClientScheduleWithRunLoop(ioHIDEventSystem, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	IOHIDEventSystemClientRegisterEventCallback(ioHIDEventSystem, handleSystemHIDEvent, NULL, NULL);
+		IOHIDEventSystemClientRef ioHIDEventSystem = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
+		IOHIDEventSystemClientScheduleWithRunLoop(ioHIDEventSystem, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+		IOHIDEventSystemClientRegisterEventCallback(ioHIDEventSystem, handleSystemHIDEvent, NULL, NULL);
+
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)deviceVibrated, CFSTR("com.mhuusko5.Knock.vibrated"), NULL, 0);
+	}
+
+	[KVibrateListener sharedInstance];
 
 	return self;
 }
 
 + (id)sharedInstance {
-	static dispatch_once_t once;
+	static dispatch_once_t onceToken;
 	static id instance;
-	dispatch_once(&once, ^{
+	dispatch_once(&onceToken, ^{
 	    instance = self.new;
 	});
 	return instance;
