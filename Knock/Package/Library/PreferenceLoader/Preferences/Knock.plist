@@ -19,7 +19,7 @@
 			<key>isStaticText</key>
 			<true/>
 			<key>label</key>
-			<string>FRONT/BACK KNOCK SENSITIVTY</string>
+			<string>FRONT/BACK KNOCK SENSITIVITY</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -45,7 +45,7 @@
 			<key>isStaticText</key>
 			<true/>
 			<key>label</key>
-			<string>SIDE KNOCK SENSITIVTY</string>
+			<string>SIDE KNOCK SENSITIVITY</string>
 		</dict>
 		<dict>
 			<key>cell</key>
