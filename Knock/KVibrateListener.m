@@ -7,6 +7,7 @@
 }
 
 extern void AudioServicesPlaySystemSoundWithVibration(SystemSoundID inSystemSoundID, void *arg, NSDictionary *vibratePattern);
+
 static void (*oldSystemVibration)(SystemSoundID inSystemSoundID, void *arg, NSDictionary *vibratePattern);
 static void newSystemVibration(SystemSoundID inSystemSoundID, void *arg, NSDictionary *vibratePattern) {
 	[[KVibrateListener sharedInstance] postVibratedEvent];
@@ -33,9 +34,10 @@ static void newSystemSound(SystemSoundID inSystemSoundID) {
 }
 
 extern void FigVibratorPlayVibration(float, CMTime, CMTime, CMTime);
+
 static void (*oldFigVibration)(float, CMTime, CMTime, CMTime);
 static void newFigVibration(float arg1, CMTime arg2, CMTime arg3, CMTime arg4) {
-    [[KVibrateListener sharedInstance] postVibratedEvent];
+	[[KVibrateListener sharedInstance] postVibratedEvent];
 	return oldFigVibration(arg1, arg2, arg3, arg4);
 }
 
@@ -44,9 +46,10 @@ static void newFigVibration(float arg1, CMTime arg2, CMTime arg3, CMTime arg4) {
 }
 
 extern void FigVibratorPlayVibrationWithDictionary(CFDictionaryRef pattern, BOOL, float);
+
 static void (*oldFigDictionaryVibration)(CFDictionaryRef pattern, BOOL, float);
 static void newFigDictionaryVibration(CFDictionaryRef pattern, BOOL arg2, float arg3) {
-    [[KVibrateListener sharedInstance] postVibratedEvent];
+	[[KVibrateListener sharedInstance] postVibratedEvent];
 	return oldFigDictionaryVibration(pattern, arg2, arg3);
 }
 
@@ -54,25 +57,13 @@ static void newFigDictionaryVibration(CFDictionaryRef pattern, BOOL arg2, float 
 	MSHookFunction(FigVibratorPlayVibrationWithDictionary, newFigDictionaryVibration, (void *)&oldFigDictionaryVibration);
 }
 
-extern void FigVibratorStartOneShot(int, int, int, int);
-static void (*oldFigVibratorStart)(int, int, int, int);
-static void newFigVibratorStart(int arg1, int arg2, int arg3, int arg4) {
-    [[KVibrateListener sharedInstance] postVibratedEvent];
-	return oldFigVibratorStart(arg1, arg2, arg3, arg4);
-}
-
-- (void)hookFigVibratorStart {
-	MSHookFunction(FigVibratorStartOneShot, newFigVibratorStart, (void *)&oldFigVibratorStart);
-}
-
 - (id)init {
 	self = [super init];
 
 	[self hookSystemVibration];
 	[self hookSystemSound];
-    [self hookFigVibration];
-    [self hookFigDictionaryVibration];
-    [self hookFigVibratorStart];
+	[self hookFigVibration];
+	[self hookFigDictionaryVibration];
 
 	return self;
 }

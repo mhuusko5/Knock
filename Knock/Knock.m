@@ -20,8 +20,8 @@ static NSString *KEventNameSide = @"com.mhuusko5.Knock.side";
 static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 
 @interface SBAlertItemsController : NSObject
-+(id)sharedInstance;
--(id)visibleAlertItem;
++ (id)sharedInstance;
+- (id)visibleAlertItem;
 @end
 
 @interface Knock : NSObject
@@ -37,6 +37,8 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 @end
 
 @implementation Knock
+
+static int checkCount = 0;
 
 - (void)checkPossibleEvents {
 	if (self.possibleEvents.count > 0) {
@@ -56,9 +58,19 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 			return;
 		}
 
-        if ([[[[objc_getClass("SBAlertItemsController") performSelector:@selector(sharedInstance)] performSelector:@selector(visibleAlertItem)] performSelector:@selector(sound)] performSelector:@selector(vibrationPattern)]) {
-            return;
-        }
+		@try {
+			if ([[[[objc_getClass("SBAlertItemsController") performSelector:@selector(sharedInstance)] performSelector:@selector(visibleAlertItem)] performSelector:@selector(sound)] performSelector:@selector(vibrationPattern)]) {
+				return;
+			}
+		}
+		@catch (NSException *exception)
+		{
+		}
+
+		if (checkCount < 2) {
+			checkCount++;
+			return;
+		}
 
 		[LASharedActivator sendEventToListener:[LAEvent eventWithName:eventName mode:[LASharedActivator currentEventMode]]];
 	}
@@ -99,11 +111,11 @@ static NSString *KEventNameFront = @"com.mhuusko5.Knock.front";
 		self.lastMaxZAccel = [NSDate date];
 	}
 
-	if (deltaX > KMinimumSideDelta) {
+	if (deltaX * sideSensitivity > KMinimumSideDelta) {
 		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameSide score:deltaX / KMinimumSideDelta]];
 	}
 
-	if (deltaZ > KMinimumFrontDelta) {
+	if (deltaZ * frontSensitivity > KMinimumFrontDelta) {
 		[self addPossibleEvent:[[KEvent alloc] initWithName:KEventNameFront score:deltaZ / KMinimumFrontDelta]];
 	}
 }
@@ -140,6 +152,24 @@ static void deviceVibrated() {
 	[[Knock sharedInstance] setLastDeviceActivity:[NSDate date]];
 }
 
+static float frontSensitivity = 1;
+static float sideSensitivity = 1;
+static void preferencesChanged() {
+	NSDictionary *prefs;
+	if (!(prefs = [[NSDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.mhuusko5.Knock.plist"])) {
+		[prefs writeToFile:@"/var/mobile/Library/Preferences/com.mhuusko5.Knock.plist" atomically:YES];
+		prefs = [[NSDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.mhuusko5.Knock.plist"];
+	}
+
+	if (prefs[@"FrontSensitivity"]) {
+		frontSensitivity = [prefs[@"FrontSensitivity"] floatValue];
+	}
+
+	if (prefs[@"SideSensitivity"]) {
+		sideSensitivity = [prefs[@"SideSensitivity"] floatValue];
+	}
+}
+
 - (id)init {
 	self = [super init];
 
@@ -173,6 +203,9 @@ static void deviceVibrated() {
 		IOHIDEventSystemClientRegisterEventCallback(ioHIDEventSystem, handleSystemHIDEvent, NULL, NULL);
 
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)deviceVibrated, CFSTR("com.mhuusko5.Knock.vibrated"), NULL, 0);
+
+		preferencesChanged();
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)preferencesChanged, CFSTR("com.mhuusko5.Knock-preferencesChanged"), NULL, 0);
 	}
 
 	[KVibrateListener sharedInstance];

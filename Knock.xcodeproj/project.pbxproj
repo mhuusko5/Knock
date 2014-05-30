@@ -51,6 +51,9 @@
 		0037C234191F10AD00900337 /* Knock.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Knock.plist; path = Package/Library/MobileSubstrate/DynamicLibraries/Knock.plist; sourceTree = "<group>"; };
 		0037C240191F10DA00900337 /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = ../../../../opt/iOSOpenDev/lib/libactivator.dylib; sourceTree = "<group>"; };
 		003B4F4B191F162E00E4C07D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		006786AF19392C930009DC51 /* Knock.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Knock.plist; sourceTree = "<group>"; };
+		006786B019392C930009DC51 /* Knock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Knock.png; sourceTree = "<group>"; };
+		006786B119392C930009DC51 /* Knock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Knock@2x.png"; sourceTree = "<group>"; };
 		008358FE1923FFAA0028C2F5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		00835900192403AB0028C2F5 /* KVibrateListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVibrateListener.h; sourceTree = "<group>"; };
 		00835901192403AB0028C2F5 /* KVibrateListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVibrateListener.m; sourceTree = "<group>"; };
@@ -174,6 +177,7 @@
 		0037C231191F10AD00900337 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				006786AD19392C930009DC51 /* PreferenceLoader */,
 				008E636F191FF99B00B31BEA /* Activator */,
 				0037C232191F10AD00900337 /* MobileSubstrate */,
 			);
@@ -194,6 +198,25 @@
 				0037C234191F10AD00900337 /* Knock.plist */,
 			);
 			name = DynamicLibraries;
+			sourceTree = "<group>";
+		};
+		006786AD19392C930009DC51 /* PreferenceLoader */ = {
+			isa = PBXGroup;
+			children = (
+				006786AE19392C930009DC51 /* Preferences */,
+			);
+			name = PreferenceLoader;
+			path = Package/Library/PreferenceLoader;
+			sourceTree = "<group>";
+		};
+		006786AE19392C930009DC51 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				006786AF19392C930009DC51 /* Knock.plist */,
+				006786B019392C930009DC51 /* Knock.png */,
+				006786B119392C930009DC51 /* Knock@2x.png */,
+			);
+			path = Preferences;
 			sourceTree = "<group>";
 		};
 		008E636F191FF99B00B31BEA /* Activator */ = {
